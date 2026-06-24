@@ -1,1 +1,6 @@
-<Solution />
+<Solution>
+  <Project Path="ExcelDataImporter.API/ExcelDataImporter.API.csproj" />
+  <Project Path="ExcelDataImporter.Application/ExcelDataImporter.Application.csproj" />
+  <Project Path="ExcelDataImporter.Domain/ExcelDataImporter.Domain.csproj" />
+  <Project Path="ExcelDataImporter.Infrastructure/ExcelDataImporter.Infrastructure.csproj" />
+</Solution>
