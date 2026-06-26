@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Scripts/">
+    <File Path="backup-database.ps1" />
+    <File Path="trigger-import.ps1" />
+  </Folder>
   <Project Path="ExcelDataImporter.API/ExcelDataImporter.API.csproj" />
   <Project Path="ExcelDataImporter.Application/ExcelDataImporter.Application.csproj" />
   <Project Path="ExcelDataImporter.Domain/ExcelDataImporter.Domain.csproj" />
