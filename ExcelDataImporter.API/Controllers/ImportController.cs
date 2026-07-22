@@ -9,7 +9,6 @@ namespace ExcelDataImporter.API.Controllers;
 [Produces("application/json")]
 public class ImportController(IImportService importService, ILogger<ImportController> logger) : ControllerBase
 {
-    /// <summary>Upload and import an Excel (.xlsx) file.</summary>
     [HttpPost]
     [Consumes("multipart/form-data")]
     [ProducesResponseType<ImportResultDto>(StatusCodes.Status200OK)]
@@ -43,7 +42,6 @@ public class ImportController(IImportService importService, ILogger<ImportContro
         }
     }
 
-    /// <summary>List all import operations.</summary>
     [HttpGet]
     [ProducesResponseType<IEnumerable<ImportOperationDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
@@ -52,7 +50,6 @@ public class ImportController(IImportService importService, ILogger<ImportContro
         return Ok(operations);
     }
 
-    /// <summary>Get all rows from a specific import operation.</summary>
     [HttpGet("{id:int}/records")]
     [ProducesResponseType<IEnumerable<ImportRowDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -63,7 +60,6 @@ public class ImportController(IImportService importService, ILogger<ImportContro
         return Ok(rows);
     }
 
-    /// <summary>Get only error rows from a specific import operation.</summary>
     [HttpGet("{id:int}/errors")]
     [ProducesResponseType<IEnumerable<ImportRowDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
