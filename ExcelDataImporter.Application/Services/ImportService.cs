@@ -105,7 +105,7 @@ public class ImportService(IImportRepository repository, ILogger<ImportService> 
 
         var saved = await repository.AddAsync(operation);
 
-        logger.LogInformation("Import {OperationId} for {FileName} completed with status {Status} - {SuccessRows}/{TotalRows} row(s) succeded, {ErrorRows} row(s) failed.", saved.Id, saved.FileName, saved.Status, saved.SuccessRows, saved.TotalRows, saved.ErrorRows);
+        logger.LogInformation("Import {OperationId} for {FileName} completed with status {Status} - {SuccessRows}/{TotalRows} row(s) succeeded, {ErrorRows} row(s) failed.", saved.Id, saved.FileName, saved.Status, saved.SuccessRows, saved.TotalRows, saved.ErrorRows);
 
         return new ImportResultDto
         (

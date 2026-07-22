@@ -132,6 +132,9 @@ _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
 
+# Serilog file logs
+logs/
+
 # TeamCity is a build add-in
 _TeamCity*
 
