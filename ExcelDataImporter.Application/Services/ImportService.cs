@@ -4,6 +4,7 @@ using ExcelDataImporter.Application.Helpers;
 using ExcelDataImporter.Application.Interfaces;
 using ExcelDataImporter.Domain.Entities;
 using ExcelDataImporter.Domain.Enums;
+using ExcelDataImporter.Domain.Validators;
 using Microsoft.Extensions.Logging;
 
 namespace ExcelDataImporter.Application.Services;
@@ -73,7 +74,7 @@ public class ImportService(IImportRepository repository, ILogger<ImportService> 
             var phone = row.Cell(3).GetString().Trim();
             var notes = row.Cell(4).GetString().Trim();
 
-            var (hasError, errorMessage) = ValidateHelper.Validate(name, email);
+            var (hasError, errorMessage) = ImportRowValidator.Validate(name, email);
 
             if (hasError)
             {
