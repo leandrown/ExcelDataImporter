@@ -7,4 +7,5 @@
   <Project Path="ExcelDataImporter.Application/ExcelDataImporter.Application.csproj" />
   <Project Path="ExcelDataImporter.Domain/ExcelDataImporter.Domain.csproj" />
   <Project Path="ExcelDataImporter.Infrastructure/ExcelDataImporter.Infrastructure.csproj" />
+  <Project Path="ExcelDataImporter.Tests/ExcelDataImporter.Tests.csproj" Id="6d671820-d13f-4d80-88bb-796b5d32f120" />
 </Solution>
