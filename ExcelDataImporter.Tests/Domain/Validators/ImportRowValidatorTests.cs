@@ -48,7 +48,7 @@ public class ImportRowValidatorTests
         var (hasError, errorMessage) = ImportRowValidator.Validate("Ana Souza", email);
 
         hasError.Should().BeTrue();
-        errorMessage.Should().Be($"{email} is not a valid email address.");
+        errorMessage.Should().Be($"'{email}' is not a valid email address.");
     }
 
     [Fact]
