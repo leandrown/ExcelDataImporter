@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Samples/">
+    <File Path="sample-contacts-excel-import.xlsx" />
+  </Folder>
   <Folder Name="/Scripts/">
     <File Path="backup-database.ps1" />
     <File Path="trigger-import.ps1" />
