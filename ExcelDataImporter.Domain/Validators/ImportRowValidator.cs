@@ -1,8 +1,8 @@
-﻿namespace ExcelDataImporter.Application.Helpers;
+﻿namespace ExcelDataImporter.Domain.Validators;
 
-public static class ValidateHelper
+public static class ImportRowValidator
 {
-    public static (bool hasError, string? message) Validate(string name, string email)
+    public static (bool HasError, string? ErrorMessage) Validate(string name, string email)
     {
         if (string.IsNullOrWhiteSpace(name))
             return (true, "Name is required.");

@@ -4,13 +4,17 @@ using ExcelDataImporter.Application.Helpers;
 using ExcelDataImporter.Application.Interfaces;
 using ExcelDataImporter.Domain.Entities;
 using ExcelDataImporter.Domain.Enums;
+using ExcelDataImporter.Domain.Validators;
+using Microsoft.Extensions.Logging;
 
 namespace ExcelDataImporter.Application.Services;
 
-public class ImportService(IImportRepository repository) : IImportService
+public class ImportService(IImportRepository repository, ILogger<ImportService> logger) : IImportService
 {
     public async Task<IEnumerable<ImportOperationDto>> GetAllOperationsAsync()
     {
+        logger.LogInformation("Retrieving all import operations.");
+
         var operations = await repository.GetAllAsync();
         return operations.Select(o => new ImportOperationDto(
             o.Id,
@@ -25,25 +29,41 @@ public class ImportService(IImportRepository repository) : IImportService
 
     public async Task<IEnumerable<ImportRowDto>> GetErrorsByOperationAsync(int operationId)
     {
+        logger.LogInformation("Retrieving errors for import operation {OperationId}.", operationId);
+
         var operation = await repository.GetByIdWithRowsAsync(operationId);
-        if (operation is null) return [];
+        if (operation is null)
+        {
+            logger.LogWarning("Import operation {OperationId} not found.", operationId);
+            return [];
+        }
         return operation.Rows.Where(r => r.HasError).Select(MapRowHelper.MapRow);
     }
 
     public async Task<IEnumerable<ImportRowDto>> GetRowsByOperationAsync(int operationId)
     {
+        logger.LogInformation("Retrieving records for import operation {OperationId}.", operationId);
+
         var operation = await repository.GetByIdWithRowsAsync(operationId);
-        if (operation is null) return [];
+        if (operation is null)
+        {
+            logger.LogWarning("Import operation {OperationId} not found.", operationId);
+            return [];
+        }
         return operation.Rows.Select(MapRowHelper.MapRow);
     }
 
     public async Task<ImportResultDto> ImportAsync(Stream fileStream, string fileName)
     {
+        logger.LogInformation("Starting import for file: {FileName}", fileName);
+
         var rows = new List<ImportRow>();
 
         using var workbook = new XLWorkbook(fileStream);
         var worksheet = workbook.Worksheet(1);
         var lastRow = worksheet.LastRowUsed()?.RowNumber() ?? 1;
+
+        logger.LogInformation("File {FileName} contains {RowCount} data row(s) to process", fileName, Math.Max(0, lastRow - 1));
 
         // Row 1 is the header - data starts at row 2
         for (int r = 2; r <= lastRow; r++)
@@ -54,7 +74,12 @@ public class ImportService(IImportRepository repository) : IImportService
             var phone = row.Cell(3).GetString().Trim();
             var notes = row.Cell(4).GetString().Trim();
 
-            var (hasError, errorMessage) = ValidateHelper.Validate(name, email);
+            var (hasError, errorMessage) = ImportRowValidator.Validate(name, email);
+
+            if (hasError)
+            {
+                logger.LogWarning("Validation failed for row {RowNumber} of file {FileName}: {ErrorMessage}", r, fileName, errorMessage);
+            }
 
             rows.Add(new ImportRow
             {
@@ -80,6 +105,8 @@ public class ImportService(IImportRepository repository) : IImportService
         };
 
         var saved = await repository.AddAsync(operation);
+
+        logger.LogInformation("Import {OperationId} for {FileName} completed with status {Status} - {SuccessRows}/{TotalRows} row(s) succeeded, {ErrorRows} row(s) failed.", saved.Id, saved.FileName, saved.Status, saved.SuccessRows, saved.TotalRows, saved.ErrorRows);
 
         return new ImportResultDto
         (
